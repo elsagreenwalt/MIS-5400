@@ -25,6 +25,7 @@ curs.execute(
 
 # Insert our data
 insert_query = 'insert into MIS_5400_staging_table (School_ID, School_Name, Ranking) values (?,?)' # Question marks as placeholders
+#TODO update this to reflect our json data
 with open(r'/tmp/data/todayilearned.json') as data_file:
     data = json.load(data_file)
     data_list = data['data']['children']
