@@ -33,9 +33,8 @@ school_list.append(json.loads(high_school_rankings_page_3.text)['schoolList'])
 ###################
 
 # Set connection string for MIS5400 Database
-connection_string = 'Driver={ODBC Driver 17 for SQL Server};Server=tcp:mis5440eg.database.windows.net,' \
-                    '1433;Database=MIS5400Project;Uid=elsagreenwalt;Pwd=Mis5400fa2019;Encrypt=yes' \
-                    ';TrustServerCertificate=no;Connection Timeout=30; '
+connection_string = 'Driver={ODBC Driver 17 for SQL Server};Server=tcp:mis5400schooldata.database.windows.net,1433;Database=school_rankings;Uid=elsagreenwalt;\
+                    Pwd=Mis5400fa2019;Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;'
 
 # Return connection object
 conn = pyodbc.connect(connection_string, autocommit=True)
