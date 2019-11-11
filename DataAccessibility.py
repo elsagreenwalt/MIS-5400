@@ -1,6 +1,7 @@
 from flask import Flask, g, render_template, abort, request
 import json
 import pyodbc
+import pprint
 
 ###############
 # CREATE APIs #
@@ -35,67 +36,8 @@ def teardown_request(exception):
 def homepage():
     return render_template('Homepage.html')
 
-# GET all school data
-@app.route('/api/v1/schools', methods=['GET'])
-def get_school_data():
-    curs = g.sql_conn.cursor()
-    query = 'select * from school_rankings.dbo.School_Info'
-    curs.execute(query)
-
-    columns = [column[0] for column in curs.description]
-    data = []
-
-    for row in curs.fetchall():
-        data.append(dict(zip(columns, row)))
-    return json.dumps(data, indent=4, sort_keys=True, default=str)
-
-
-
 # GET all school rankings
-@app.route('/api/v1/rankings', methods=['GET'])
-def get_school_rankings():
-    curs = g.sql_conn.cursor()
-    query = 'select * from school_rankings.dbo.School_Rankings'
-    curs.execute(query)
-
-    columns = [column[0] for column in curs.description]
-    data = []
-
-    for row in curs.fetchall():
-        data.append(dict(zip(columns, row)))
-    return json.dumps(data, indent=4, sort_keys=True, default=str)
-
-
-# GET information for one school
-@app.route('/api/v1/schools/<string:school_id>', methods=['GET'])
-def get_single_school_data(school_id):
-    curs = g.sql_conn.cursor()
-    curs.execute("select * from school_rankings.dbo.School_Info where school_id = ?", school_id)
-
-    columns = [column[0] for column in curs.description]
-    data = []
-
-    for row in curs.fetchall():
-        data.append(dict(zip(columns, row)))
-
-    return json.dumps(data, indent=4, sort_keys=True, default=str)
-
-# GET ranking for one school
-@app.route('/api/v1/rankings/<string:school_id>', methods=['GET'])
-def get_single_school_ranking(school_id):
-    curs = g.sql_conn.cursor()
-    curs.execute("select * from school_rankings.dbo.School_Rankings where school_id = ?", school_id)
-
-    columns = [column[0] for column in curs.description]
-    data = []
-
-    for row in curs.fetchall():
-        data.append(dict(zip(columns, row)))
-
-    return json.dumps(data, indent=4, sort_keys=True, default=str)
-
-# GET all school rankings
-@app.route('/api/v1/all', methods=['GET'])
+@app.route('/api/v1/school_rankings', methods=['GET'])
 def get_school_rankings_and_info():
     curs = g.sql_conn.cursor()
     query = 'SELECT i.School_Name, r.Rank, r.Avg_Standard_Score \
@@ -109,6 +51,24 @@ def get_school_rankings_and_info():
     for row in curs.fetchall():
         data.append(dict(zip(columns, row)))
     return json.dumps(data, indent=4, sort_keys=True, default=str)
+
+# GET rankings for one school
+@app.route('/api/v1/schools/<string:school_id>', methods=['GET'])
+def get_single_school_data(school_id):
+    curs = g.sql_conn.cursor()
+    curs.execute("SELECT i.School_Name, r.Rank, r.Avg_Standard_Score \
+                    FROM school_rankings.dbo.School_Info as i \
+                        JOIN school_rankings.dbo.School_Rankings as r on r.School_ID = i.School_ID \
+                    WHERE i.school_id = ?", school_id)
+
+    columns = [column[0] for column in curs.description]
+    data = []
+
+    for row in curs.fetchall():
+        data.append(dict(zip(columns, row)))
+
+    return json.dumps(data, indent=4, sort_keys=True, default=str)
+
 
 if __name__ == '__main__':
     app.run()
