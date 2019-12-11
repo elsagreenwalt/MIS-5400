@@ -52,8 +52,11 @@ else:
         School_ID nvarchar(100) primary key
         ,School_Name varchar(100)
         ,Street_Address varchar(100)
+        ,City varchar(100)
         ,State varchar(100)
         ,Zip varchar(20)
+        ,Lat float 
+        ,Long float
         )
 
         '''
@@ -78,8 +81,8 @@ add_data = input("Yes/No: Would you like to add data to the database? ")
 
 if add_data == 'Yes':
     # Set up insert query for School_Info table
-    insert_query = 'insert into School_Info (School_ID, School_Name, Street_Address, State, Zip) \
-                    values (?,?,?,?,?)'  # Question marks as placeholders
+    insert_query = 'insert into School_Info (School_ID, School_Name, Street_Address, City, State, Zip, Lat, Long) \
+                    values (?,?,?,?,?,?,?,?)'  # Question marks as placeholders
 
     # TODO figure out how to get this into one for loop
     # Insert the first page
@@ -88,9 +91,12 @@ if add_data == 'Yes':
         school_id = school_list[0][i]["schoolid"]
         school_name = school_list[0][i]["schoolName"]
         street_address = school_list[0][i]["address"]["street"]
+        city = school_list[0][i]["address"]["city"]
         state = school_list[0][i]["address"]["state"]
         zip = school_list[0][i]["address"]["zip"]
-        row = (school_id, school_name, street_address, state, zip)
+        lat = school_list[0][i]["address"]["latLong"]["latitude"]
+        long = school_list[0][i]["address"]["latLong"]["longitude"]
+        row = (school_id, school_name, street_address, city, state, zip, lat, long)
         rows_to_insert.append(row)
     curs.executemany(insert_query, rows_to_insert)
 
@@ -100,9 +106,12 @@ if add_data == 'Yes':
         school_id = school_list[1][i]["schoolid"]
         school_name = school_list[1][i]["schoolName"]
         street_address = school_list[1][i]["address"]["street"]
+        city = school_list[1][i]["address"]["city"]
         state = school_list[1][i]["address"]["state"]
         zip = school_list[1][i]["address"]["zip"]
-        row = (school_id, school_name, street_address, state, zip)
+        lat = school_list[1][i]["address"]["latLong"]["latitude"]
+        long = school_list[1][i]["address"]["latLong"]["longitude"]
+        row = (school_id, school_name, street_address, city, state, zip, lat, long)
         rows_to_insert.append(row)
     curs.executemany(insert_query, rows_to_insert)
 
@@ -112,9 +121,12 @@ if add_data == 'Yes':
         school_id = school_list[2][i]["schoolid"]
         school_name = school_list[2][i]["schoolName"]
         street_address = school_list[2][i]["address"]["street"]
+        city = school_list[2][i]["address"]["city"]
         state = school_list[2][i]["address"]["state"]
         zip = school_list[2][i]["address"]["zip"]
-        row = (school_id, school_name, street_address, state, zip)
+        lat = school_list[2][i]["address"]["latLong"]["latitude"]
+        long = school_list[2][i]["address"]["latLong"]["longitude"]
+        row = (school_id, school_name, street_address, city, state, zip, lat, long)
         rows_to_insert.append(row)
     curs.executemany(insert_query, rows_to_insert)
 
